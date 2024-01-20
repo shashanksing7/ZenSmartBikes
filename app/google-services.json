@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "494616065717",
+    "project_id": "zentorq-91cfd",
+    "storage_bucket": "zentorq-91cfd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494616065717:android:ed49089152c6f9799330fc",
+        "android_client_info": {
+          "package_name": "com.example.zenn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494616065717-da77gje7qu6u2mrv0ia0ree75jten03i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV6zVI6mz5Zxph1XmtGaxbnqufPCROT7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494616065717-da77gje7qu6u2mrv0ia0ree75jten03i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494616065717:android:266ed55e293f80469330fc",
+        "android_client_info": {
+          "package_name": "com.example.zensmartbikes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494616065717-da77gje7qu6u2mrv0ia0ree75jten03i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV6zVI6mz5Zxph1XmtGaxbnqufPCROT7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494616065717-da77gje7qu6u2mrv0ia0ree75jten03i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

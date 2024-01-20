@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,18 +79,23 @@ public class RideFragment extends Fragment {
         serviceConnection=new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
+
                 /*
                 Service Connected getting the object of the Binder class then finally getting the object of the Service.
                  */
                 OnGoingRideService.OnGoingRideServicBinder rideServicBinder=(OnGoingRideService.OnGoingRideServicBinder) service;
                 onGoingRideService=rideServicBinder.getOnGoingRideService();
-                /*
-                If service is not running then start it.
+                 /*
+                    Starting the service if it's not already started;
                  */
                 if(!isServiceRunning(OnGoingRideService.class)){
-                    Intent intent=new Intent(getContext(),OnGoingRideService.class);
-                    getContext().startService(intent);
-
+                    if(onGoingRideService!=null){
+                        Intent intent=new Intent(getContext(),OnGoingRideService.class);
+                        getContext().startService(intent);
+                    }
+                    else{
+                        Toast.makeText(onGoingRideService, "Restart Mobile App", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
@@ -185,7 +191,6 @@ public class RideFragment extends Fragment {
         rideBinding.PauseResumeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rideBinding.PauseResumeButton.setEnabled(false);
                 PauseResume();
             }
         });
@@ -230,13 +235,9 @@ public class RideFragment extends Fragment {
     }
 
     /*
-     Method to manipulate the Buttons.
- */
+   Method to manipulate the Buttons.
+  */
     private void CheckButtons() {
-    /*
-    Checking buttons and disabling them.
-    */
-
         // If the ride is resumed, set the text of the Pause/Resume button to "Pause"
         if (RideVariables.RideResumed) {
             rideBinding.PauseResumeButton.setText("Pause");
@@ -250,19 +251,24 @@ public class RideFragment extends Fragment {
         if (!RideVariables.RideStarted) {
             rideBinding.PauseResumeButton.setEnabled(false);
             rideBinding.StopButton.setEnabled(false);
-        } else {
-            // If the ride has started, disable the Start button
-            rideBinding.StartButton.setEnabled(false);
-        }
 
-        // If the device is not connected, disable the Start button and Connect button
-        if (!RideVariables.DeviceConnected) {
+            // If the device is not connected, enable the Connect button and disable the Start button
+            if (!RideVariables.DeviceConnected) {
+                rideBinding.ConnectButton.setEnabled(true);
+                rideBinding.StartButton.setEnabled(false);
+            } else {
+                // If the device is connected, disable the Start button and Connect button
+                rideBinding.StartButton.setEnabled(false);
+                rideBinding.ConnectButton.setEnabled(false);
+            }
+        } else {
+            // If the ride has started, disable the Start button and Connect button
             rideBinding.StartButton.setEnabled(false);
-        }
-        else {
             rideBinding.ConnectButton.setEnabled(false);
         }
     }
+
+
 
 
     /*
@@ -288,31 +294,61 @@ public class RideFragment extends Fragment {
       /*
       This method will be used to Connect to the Smart Device ,it wll call The HandlerConnectMethod of service;
       */
+
+
     public void ConnectToDevice(){
+    /*
+    this variable will tell if the device is connected or not.
+     */
+        boolean isConnected = false;
 
         /*
-        this variable will tell if the device is connected or not.
+        Starting the service if it's not already started;
          */
-        boolean IsConnected=false;
+        if(!isServiceRunning(OnGoingRideService.class)){
+            if(onGoingRideService!=null){
+                Intent intent=new Intent(getContext(),OnGoingRideService.class);
+                getContext().startService(intent);
+            }
+            else{
+                Toast.makeText(onGoingRideService, "Restart Mobile App", Toast.LENGTH_SHORT).show();
+            }
+        }
+    /*
+    Calling the HandlerConnectMethod() from service.
+    */
+        if(serviceConnection != null && onGoingRideService != null) {
+            isConnected = onGoingRideService.HandlerConnectMethod();
         /*
-           Calling the HandlerConnectMethod() from service.
-         */
-        if(serviceConnection!=null){
-           IsConnected= onGoingRideService.HandlerConnectMethod();
-           /*
-           If Device is connected it will disable the connect button else it will enable the connect button.
-            */
-           if(IsConnected){
-               rideBinding.ConnectButton.setEnabled(false);
-               rideBinding.StartButton.setEnabled(true);
-           }
-           else {
-               rideBinding.ConnectButton.setEnabled(true);
-           }
-        }else {
-            Toast.makeText(onGoingRideService, "wait for service to start", Toast.LENGTH_SHORT).show();
+        If Device is connected it will disable the connect button else it will enable the connect button.
+        */
+            if(isConnected){
+                if(onGoingRideService.CheckFirstBit()){
+                    rideBinding.ConnectButton.setEnabled(false);
+                    rideBinding.StartButton.setEnabled(true);
+                    Log.d("mytag", "ConnectToDevice: setting start enabled");
+                }
+                else{
+                    try {
+                        Thread.sleep(1000);
+                    }
+                    catch (Exception e){
+                        Log.d("mytag", "ConnectToDevice: "+e.toString());
+                    }
+                    rideBinding.ConnectButton.setEnabled(false);
+                    rideBinding.StartButton.setEnabled(true);
+                    Log.d("mytag", "ConnectToDevice: setting start enabled");
+                }
+
+            } else {
+                rideBinding.ConnectButton.setEnabled(true);
+                Log.d("mytag", "notconnectd: ");
+            }
+        } else {
+            Toast.makeText(getContext(), "Wait for service to start", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     /*
     This method will be used to start Ride of the Smart Device ,it wll call The StartRideHandlerMethod() of service;
@@ -325,6 +361,7 @@ public class RideFragment extends Fragment {
         boolean IsRideStarted=false;
         if(serviceConnection!=null){
             IsRideStarted=onGoingRideService.StartRideHandlerMethod();
+
             /*
            If Device is connected it will disable the connect button else it will enable the connect button.
             */
@@ -335,6 +372,7 @@ public class RideFragment extends Fragment {
             }
             else {
                 rideBinding.StartButton.setEnabled(true);
+
             }
         }
         else{
@@ -382,7 +420,6 @@ public class RideFragment extends Fragment {
                 if(IsRideResumed){
                     rideBinding.PauseResumeButton.setText("Pause");
                 }
-
             }
             else{
                 Toast.makeText(onGoingRideService, "Could not Resume,the Ride  Check Connection", Toast.LENGTH_SHORT).show();
@@ -407,7 +444,9 @@ public class RideFragment extends Fragment {
                 /*
                 Navigate to the home fragment.
                  */
-                CheckButtons();
+                if(ServiceStopped()){
+                    CheckButtons();
+                }
 
             }
             else {
@@ -417,5 +456,19 @@ public class RideFragment extends Fragment {
         else{
             Toast.makeText(onGoingRideService, "Could not Stop,the Ride  Check Connection", Toast.LENGTH_SHORT).show();
         }
+    }
+    /*
+    method to stop service.
+     */
+    public boolean ServiceStopped(){
+        try {
+            onGoingRideService.stopSelf();
+            return  true;
+        }
+        catch (Exception e){
+            Log.d("mytag", "ServiceStopped: "+e.toString());
+            return  false;
+        }
+
     }
 }

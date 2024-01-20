@@ -23,6 +23,8 @@ public class OnGoingRideService extends Service {
      */
     private  OngoingRideHelperThread rideHelperThread;
 
+    private final String TAG="mytag";
+
     /*
    This will be used to differentiate the message form each other.
     */
@@ -31,6 +33,7 @@ public class OnGoingRideService extends Service {
     public static final int MESSAGE_PAUSE_RIDE = 3;
     public static final int MESSAGE_STOP_RIDE = 4;
     public static final  int MESSAGE_CONNECT_DEVICE=5;
+    public static final  int MESSAGE_CHECK_FIRST_BIT=6;
 
     /*
     OnCreate Method.
@@ -39,11 +42,12 @@ public class OnGoingRideService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        /*
-        Initializing the Variable of the helperThread.
-         */
-        rideHelperThread=new OngoingRideHelperThread();
+    /*
+    Initializing the Variable of the helperThread.
+     */
+        rideHelperThread = new OngoingRideHelperThread();
         rideHelperThread.start();
+
     }
 
     /*
@@ -113,9 +117,8 @@ public class OnGoingRideService extends Service {
          Connecting Smart Device.
          */
         String ConnectDeviceMessage = "MacAddress";
-        Message ConnectDeviceMessageObj = rideHelperThread.OnGoingRideThreadHandler.obtainMessage(MESSAGE_RESUME_RIDE, ConnectDeviceMessage);
-        rideHelperThread.OnGoingRideThreadHandler.sendMessage(ConnectDeviceMessageObj);
-        return  rideHelperThread.OnGoingRideThreadHandler.CheckIfConnected();
+        Message ConnectDeviceMessageObj = rideHelperThread.OnGoingRideThreadHandler.obtainMessage(MESSAGE_CONNECT_DEVICE, ConnectDeviceMessage);
+        return rideHelperThread.OnGoingRideThreadHandler.sendMessage(ConnectDeviceMessageObj);
 
     }
 
@@ -125,8 +128,7 @@ public class OnGoingRideService extends Service {
     public boolean StartRideHandlerMethod(){
         String StartRideMessage="1";
         Message StartRideMessageObject=rideHelperThread.OnGoingRideThreadHandler.obtainMessage(MESSAGE_START_RIDE,StartRideMessage);
-        rideHelperThread.OnGoingRideThreadHandler.sendMessage(StartRideMessageObject);
-        return rideHelperThread.OnGoingRideThreadHandler.isRideStarted();
+        return  rideHelperThread.OnGoingRideThreadHandler.sendMessage(StartRideMessageObject);
     }
 
     /*
@@ -135,8 +137,7 @@ public class OnGoingRideService extends Service {
     public boolean PauseRideHandlerMethod(){
         String PauseRideMessage="2";
         Message PauseRideMessageObject=rideHelperThread.OnGoingRideThreadHandler.obtainMessage(MESSAGE_PAUSE_RIDE,PauseRideMessage);
-        rideHelperThread.OnGoingRideThreadHandler.sendMessage(PauseRideMessageObject);
-        return rideHelperThread.OnGoingRideThreadHandler.isRidePaused();
+        return rideHelperThread.OnGoingRideThreadHandler.sendMessage(PauseRideMessageObject);
 
     }
     /*
@@ -145,8 +146,7 @@ public class OnGoingRideService extends Service {
     public boolean StopRideHandlerMethod(){
         String StopRideMessage="2";
         Message StopRideMessageObject=rideHelperThread.OnGoingRideThreadHandler.obtainMessage(MESSAGE_STOP_RIDE,StopRideMessage);
-        rideHelperThread.OnGoingRideThreadHandler.sendMessage(StopRideMessageObject);
-        return rideHelperThread.OnGoingRideThreadHandler.isRideStopped();
+        return rideHelperThread.OnGoingRideThreadHandler.sendMessage(StopRideMessageObject);
     }
 
     /*
@@ -155,8 +155,16 @@ public class OnGoingRideService extends Service {
     public boolean ResumeRideHandlerMethod(){
         String ResumeRideMessage="1";
         Message ResumeRideMessageObject=rideHelperThread.OnGoingRideThreadHandler.obtainMessage(MESSAGE_RESUME_RIDE,ResumeRideMessage);
-        rideHelperThread.OnGoingRideThreadHandler.sendMessage(ResumeRideMessageObject);
-        return  rideHelperThread.OnGoingRideThreadHandler.isRideResumed();
+        return  rideHelperThread.OnGoingRideThreadHandler.sendMessage(ResumeRideMessageObject);
+    }
+
+    /*
+    Method to check if first bit is already sent or not
+     */
+    public boolean CheckFirstBit(){
+        String ResumeRideMessage="9";
+        Message CheckFirstBitMessageObject=rideHelperThread.OnGoingRideThreadHandler.obtainMessage(MESSAGE_CHECK_FIRST_BIT,ResumeRideMessage);
+        return rideHelperThread.OnGoingRideThreadHandler.sendMessage(CheckFirstBitMessageObject);
     }
 
 

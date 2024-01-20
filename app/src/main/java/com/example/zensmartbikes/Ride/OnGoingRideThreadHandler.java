@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 /*
@@ -57,14 +59,11 @@ public class OnGoingRideThreadHandler extends Handler {
     private static final int MESSAGE_PAUSE_RIDE = 3;
     private static final int MESSAGE_STOP_RIDE = 4;
     private static final  int MESSAGE_CONNECT_DEVICE=5;
-
+    public static final  int MESSAGE_CHECK_FIRST_BIT=6;
     /*
-    Creating boolean Vlaues that will let the user know if the operation were successful or not.
+    Object of the service class.
      */
-    private boolean RideStarted=false;
-    private boolean RidePaused=false;
-    private boolean RideResumed=false;
-    private boolean RideStopped=false;
+    private OnGoingRideService onGoingRideService;
 
 
 
@@ -100,161 +99,257 @@ public class OnGoingRideThreadHandler extends Handler {
             case MESSAGE_CONNECT_DEVICE:
                 ConnectToSmartBike();
                 break;
+
+            case MESSAGE_CHECK_FIRST_BIT:
+                SendFirstBit();
+                break;
             default:
                 Log.d(TAG, "handleMessage: Unidentified call ");
                 break;
         }
 
     }
-    /*
+
+        /*
     This method will be used to Start the Ride.
     */
-    public void StartRide(String message) {
+    public boolean StartRide(String message) {
         if (outputStream != null) {
             try {
                 outputStream.write(message.getBytes("UTF-8"));
-                RideStarted=true;
+
+                // Setting the Variables of RideVariables class.
+                RideVariables.RideStarted = true;
+                return true;
             } catch (IOException e) {
-                Log.e(TAG, "startRide: Unable to start Ride", e);
+                Log.e(TAG, "StartRide: Unable to start Ride", e);
+                // Return false if there is an exception while writing to the outputStream
+                return false;
             }
         } else {
-            Log.e(TAG, "startRide: Output stream is null");
+            Log.e(TAG, "StartRide: Output stream is null");
+            // Return false if outputStream is null
+            return false;
         }
     }
 
-    /*
+        /*
     This method will be used to Resume the ride.
     */
-    public void ResumeRide(String message) {
+    public boolean ResumeRide(String message) {
         if (outputStream != null) {
             try {
                 outputStream.write(message.getBytes("UTF-8"));
-                RideResumed=true;
+
+                // Setting the Variables of RideVariables class.
+                RideVariables.RideResumed = true;
+                return true; // Return true on success
             } catch (IOException e) {
-                Log.e(TAG, "resumeRide: Unable to resume Ride", e);
+                Log.e(TAG, "ResumeRide: Unable to resume Ride", e);
+                return false; // Return false if there is an exception while writing to the outputStream
             }
         } else {
-            Log.e(TAG, "resumeRide: Output stream is null");
+            Log.e(TAG, "ResumeRide: Output stream is null");
+            return false; // Return false if outputStream is null
         }
     }
 
     /*
-    This method will be used to Stop the ride.
-    */
-    public void StopRide(String message) {
+This method will be used to Stop the ride.
+*/
+    public boolean StopRide(String message) {
         if (outputStream != null) {
             try {
                 outputStream.write(message.getBytes("UTF-8"));
-                RideStopped=true;
-                /*
-                Setting the Variables of RideVariables class.
-                 */
-                
+
+                // Setting the Variables of RideVariables class.
+                RideVariables.RideStarted = false;
+                RideVariables.RidePaused = false;
+                RideVariables.RideResumed = false;
+                closeBluetoothConnection();
+                return true; // Return true on success
             } catch (IOException e) {
-                Log.e(TAG, "stopRide: Unable to stop Ride", e);
+                Log.e(TAG, "StopRide: Unable to stop Ride", e);
+                return false; // Return false if there is an exception while writing to the outputStream
             }
         } else {
-            Log.e(TAG, "stopRide: Output stream is null");
+            Log.e(TAG, "StopRide: Output stream is null");
+            return false; // Return false if outputStream is null
         }
     }
 
-    /*
+        /*
     This method will be used to Pause the Ride.
     */
-    public void PauseRide(String message) {
+    public boolean PauseRide(String message) {
         if (outputStream != null) {
             try {
                 outputStream.write(message.getBytes("UTF-8"));
-                RidePaused=true;
-                /*
-                Setting the Variables of RideVariables class.
-                 */
-                RideVariables.RidePaused=true;
+
+                // Setting the Variables of RideVariables class.
+                RideVariables.RidePaused = true;
+                return true; // Return true on success
             } catch (IOException e) {
-                Log.e(TAG, "pauseRide: Unable to pause Ride", e);
+                Log.e(TAG, "PauseRide: Unable to pause Ride", e);
+                return false; // Return false if there is an exception while writing to the outputStream
             }
         } else {
-            Log.e(TAG, "pauseRide: Output stream is null");
+            Log.e(TAG, "PauseRide: Output stream is null");
+            return false; // Return false if outputStream is null
         }
     }
 
 
     /*
-    This method will be called to connect to the bluetooth device.
-     */
+   This method will be called to connect to the Bluetooth device.
+   */
     @SuppressLint("MissingPermission")
-    public void ConnectToSmartBike() {
+    public boolean ConnectToSmartBike() {
+        // Getting the Bluetooth Adapter.
+        adapter = BluetoothAdapter.getDefaultAdapter();
 
-         /*
-        Getting the Bluetooth Adapter.
-         */
-
-        adapter=BluetoothAdapter.getDefaultAdapter();
-
-        /*
-        Check the Adapter is existing or not.
-         */
-
-        if(adapter==null){
-            /*
-            Adapter Not found.
-             */
-            return;
+        // Check if the Adapter exists.
+        if (adapter == null) {
+            // Adapter Not found.
+            return false;
         }
-        /*
-        Adapter Found and creating a device and returning it.
-         */
 
-        device=adapter.getRemoteDevice(MacAddress);
+        // Adapter Found, create a device and return it.
+        device = adapter.getRemoteDevice(MacAddress);
 
         Log.d(TAG, "CreateDevice: device created");
 
-        /*
-        This variable represents the number of attempts to connect to the device;
-         */
-        int NumberOfConnectionAttempts=0;
+        // Creating a socket from the Device.
+        BluetoothSocket mySocket = null;
 
-        /*
-        Creating a socket from the Device.
-         */
-        BluetoothSocket mySocket=null;
-        /*
-        Trying to create a Socket from the .
-         */
-
-        try{
+        // Trying to create a Socket.
+        try {
             mySocket = device.createRfcommSocketToServiceRecord(uuid);
-        } catch (IOException e) {
-            Log.d(TAG, "ConnectToSmartBike: unable to create socket  "+e.toString());
-        }
-        socket=mySocket;
-        if(socket!=null){
-            while (NumberOfConnectionAttempts <= 5 && !socket.isConnected()) {
+
+            // This variable represents the number of attempts to connect to the device;
+            int numberOfConnectionAttempts = 0;
+
+            while (numberOfConnectionAttempts <= 5 && !mySocket.isConnected()) {
                 try {
-                    socket.connect();
-                    outputStream = socket.getOutputStream();
-                    inputStream = socket.getInputStream();
-                    /*
-                    Setting the Variables of RideVariables class.
-                     */
-                    RideVariables.DeviceConnected=true;
+                    mySocket.connect();
+                    outputStream = mySocket.getOutputStream();
+                    inputStream = mySocket.getInputStream();
+
+                    // Setting the Variables of RideVariables class.
+                    RideVariables.DeviceConnected = true;
+                    socket = mySocket; // Assigning the created socket to the class variable
+
+                    // Connection successful
+                    return true;
                 } catch (Exception e) {
                     Log.e(TAG, "ConnectToSmartBike: Unable to connect " + e.toString());
-                    /*
-                    Adding a delay before the next connection attempt
-                     */
+
+                    // Adding a delay before the next connection attempt
                     try {
-                        Thread.sleep(1000); // 1 second delay,can be  adjust as needed
+                        Thread.sleep(1000); // 1-second delay, can be adjusted as needed
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
                 }
-                NumberOfConnectionAttempts++;
+                numberOfConnectionAttempts++;
             }
 
+        } catch (IOException e) {
+            Log.d(TAG, "ConnectToSmartBike: unable to create socket  " + e.toString());
         }
 
+        // Close the socket if it's not connected
+        if (mySocket != null && !mySocket.isConnected()) {
+            try {
+                mySocket.close();
+            } catch (IOException e) {
+                Log.e(TAG, "ConnectToSmartBike: Error closing Bluetooth socket", e);
+            }
+        }
+
+        // Connection failed
+        return false;
     }
+    /*
+   This method will be called to connect to the bluetooth device.
+    */
+//    @SuppressLint("MissingPermission")
+//    public void ConnectToSmartBike() {
+//
+//         /*
+//        Getting the Bluetooth Adapter.
+//         */
+//
+//        adapter=BluetoothAdapter.getDefaultAdapter();
+//
+//        /*
+//        Check the Adapter is existing or not.
+//         */
+//
+//        if(adapter==null){
+//            /*
+//            Adapter Not found.
+//             */
+//            return;
+//        }
+//        /*
+//        Adapter Found and creating a device and returning it.
+//         */
+//
+//       try{
+//           device=adapter.getRemoteDevice(MacAddress);
+//           Log.d(TAG, "ConnectToSmartBike: got device");
+//       }
+//       catch (Exception e){
+//           Log.d(TAG, "ConnectToSmartBike: device not created"+e.toString());
+//       }
+//
+//        Log.d(TAG, "CreateDevice: device created");
+//
+//        /*
+//        This variable represents the number of attempts to connect to the device;
+//         */
+//        int NumberOfConnectionAttempts=0;
+//
+//        /*
+//        Creating a socket from the Device.
+//         */
+//        BluetoothSocket mySocket=null;
+//        /*
+//        Trying to create a Socket from the .
+//         */
+//
+//        try{
+//            mySocket = device.createRfcommSocketToServiceRecord(uuid);
+//            Log.d(TAG, "ConnectToSmartBike:  createed socket  ");
+//        } catch (IOException e) {
+//            Log.d(TAG, "ConnectToSmartBike: unable to create socket  "+e.toString());
+//        }
+//        socket=mySocket;
+//        if(socket!=null){
+//            do{
+//                /*
+//                Connecting to the device
+//                 */
+//                try {
+//                    socket.connect();
+//                   /*
+//                   Getting the inputStream and outputStream.
+//                    */
+//                    outputStream=socket.getOutputStream();
+//                    inputStream=socket.getInputStream();
+//
+//
+//                }
+//                catch (Exception e){
+//                    Log.d(TAG, "ConnectToSmartBike: Unable to connect "+e.toString());
+//                }
+//
+//            }while (NumberOfConnectionAttempts<=5&&!socket.isConnected());
+//        }
+//
+//    }
+
 
     /*
         Closing the Socket of device.
@@ -263,6 +358,7 @@ public class OnGoingRideThreadHandler extends Handler {
         try {
             if (socket != null) {
                 socket.close();
+                RideVariables.DeviceConnected=false;
             }
         } catch (IOException e) {
             Log.e(TAG, "closeBluetoothConnection: Error closing Bluetooth socket", e);
@@ -272,32 +368,37 @@ public class OnGoingRideThreadHandler extends Handler {
     /*
     Check if device is connected or not.
      */
-    public  boolean CheckIfConnected(){
-        if(socket.isConnected()){
-            return  true;
+    public boolean CheckIfConnected() {
+        // Check if the BluetoothSocket is initialized
+        if (socket != null) {
+            // Check if the BluetoothSocket is connected
+            if (socket.isConnected()) {
+                // Your existing code for handling the connected state
+                return true;
+            } else {
+                Log.d(TAG, "CheckIfConnected: not connected");
+                return false;
+            }
+        } else {
+            Log.d(TAG, "CheckIfConnected: socket null,try again");
+            return false;
         }
-        return  false;
     }
 
     /*
-    Getter method for boolean variables
+    method to check if sent first bit is sent or not;
      */
-
-    public boolean isRideStarted() {
-        return RideStarted;
+    public boolean SendFirstBit(){
+        String message="FirstBit";
+        try {
+            outputStream.write(message.getBytes("UTF-8"));
+            return  true;
+        } catch (IOException e) {
+            Log.d(TAG, "SendFirstBit: "+e.toString());
+            return  false;
+        }
     }
 
-    public boolean isRidePaused() {
-        return RidePaused;
-    }
-
-    public boolean isRideResumed() {
-        return RideResumed;
-    }
-
-    public boolean isRideStopped() {
-        return RideStopped;
-    }
 }
 
 

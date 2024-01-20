@@ -1,14 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpScreen.SignUpFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".SignUpScreen.SignUpFragment"
+    android:background="@drawable/splash_screen_bg">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:fillViewport="true"
+        android:isScrollContainer="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
-</FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:orientation="vertical"
+        android:gravity="end"
+        android:background="@drawable/verifyotplowerimg">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:orientation="vertical"
+                android:gravity="end"
+                android:background="@drawable/verifyotplowerimg">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="Just A Few Details before you are ready."
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:textSize="25dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"/>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/UserNameTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="Name"
+                    app:hintTextColor="#FFBE47"
+                    app:startIconTint="#FFBE47"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="40"
+                    app:startIconDrawable="@drawable/ic_baseline_person_24"
+                    app:boxStrokeColor="#FFBE47"
+                    android:layout_gravity="center"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/UserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+                        android:inputType="text"
+                        android:textCursorDrawable="@drawable/cursor"
+
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/EmailTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="E-mail"
+                    app:hintTextColor="#FFBE47"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="40"
+                    app:startIconTint="#FFBE47"
+                    app:startIconDrawable="@drawable/ic_baseline_email_24"
+                    app:boxStrokeColor="#FFBE47"
+                    android:layout_gravity="center"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/RiderEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+                        android:inputType="text"
+                        android:textCursorDrawable="@drawable/cursor"
+
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/GenderTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="Gender"
+                    app:startIconTint="#FFBE47"
+                    app:startIconDrawable="@drawable/gender"
+                    app:hintTextColor="#FFBE47"
+                    app:boxStrokeColor="#FFBE47"
+                    android:layout_gravity="center">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/SignupScreenGender"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="none"
+                        android:layout_weight="1"
+
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/SecuirtyKeyTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="Secret Key"
+                    app:hintTextColor="#FFBE47"
+                    app:counterEnabled="true"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleDrawable="@drawable/password_toggle_selector"
+                    app:counterMaxLength="40"
+                    app:startIconDrawable="@drawable/ic_baseline_password_24"
+                    app:startIconTint="#FFBE47"
+                    app:passwordToggleTint="#FFBE47"
+                    app:boxStrokeColor="#FFBE47"
+                    android:layout_gravity="center"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/SecurityKey"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+                        android:inputType="textPassword"
+                        android:textCursorDrawable="@drawable/cursor"
+
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/loginconfirm"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="Continue"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textAllCaps="false"
+                    android:layout_gravity="center"
+                    android:background="@drawable/educationaluibutton"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <TextView
+                    android:id="@+id/ToastContainer"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/black"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:layout_height="wrap_content"
+                    android:text="Terms and Conditions"
+                    android:textSize="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
