@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OnBoardingScreen.OnBoardingScreenOne">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom|end"
+      android:orientation="vertical"
+      android:weightSum="1">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:src="@drawable/green"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/OnBoardingScreen1"
+        android:textSize="20dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <!-- RelativeLayout for the second AppCompatImageView and Button -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5">
+
+
+      <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/educationlauilowerimg"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:scaleType="centerCrop"
+          android:src="@drawable/educationaluilowerimg"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="1.0"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintVertical_bias="0.0" />
+
+      <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/onBoardingScreenOneButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:background="@drawable/group_3"
+          android:layout_marginTop="100dp"
+          app:layout_constraintBottom_toBottomOf="@+id/educationlauilowerimg"
+          app:layout_constraintEnd_toEndOf="@+id/educationlauilowerimg"
+          app:layout_constraintStart_toStartOf="@+id/educationlauilowerimg"
+          app:layout_constraintTop_toTopOf="@+id/educationlauilowerimg"
+           />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </LinearLayout>
+
+</FrameLayout>

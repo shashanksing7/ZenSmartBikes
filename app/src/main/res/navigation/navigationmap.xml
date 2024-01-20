@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigationmap"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.zensmartbikes.Home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.zensmartbikes.LoginScreen.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/onBoardingScreenOne"
+        android:name="com.example.zensmartbikes.OnBoardingScreen.OnBoardingScreenOne"
+        android:label="fragment_on_boarding_screen_one"
+        tools:layout="@layout/fragment_on_boarding_screen_one" >
+        <action
+            android:id="@+id/action_onBoardingScreenOne_to_onBoardingScreenTwo"
+            app:destination="@id/onBoardingScreenTwo" />
+    </fragment>
+    <fragment
+        android:id="@+id/onBoardingScreenTwo"
+        android:name="com.example.zensmartbikes.OnBoardingScreen.OnBoardingScreenTwo"
+        android:label="fragment_on_boarding_screen_two"
+        tools:layout="@layout/fragment_on_boarding_screen_two" />
+    <fragment
+        android:id="@+id/rideFragment"
+        android:name="com.example.zensmartbikes.Ride.RideFragment"
+        android:label="fragment_ride"
+        tools:layout="@layout/fragment_ride" />
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.zensmartbikes.SignUpScreen.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.zensmartbikes.Profile.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.zensmartbikes.Map.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" />
+</navigation>

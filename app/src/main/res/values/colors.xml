@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="AppColor">#FFA500</color>
+    <color name="RippleEffectColor">#83FFFFFF</color>
+    <color name="HomeBgColor">#EFCC8B</color>
+    <color name="navBgColor">#C0C0C0</color>
+    <color name="ConnectButtonColo">#E6D32E</color>
+    <color name="StartButtonColo">#25A72A</color>
+    <color name="PauseResumeButtonColo">#FF9800</color>
+    <color name="StopButtoncolo">#DF1F1F</color>
+
+</resources>
