@@ -22,7 +22,7 @@ public class ZenSmartBikesNotifications extends ContextWrapper {
     /*
         This class will be used to create notification channel.
          */
-    public  static void CreateRideNotificationChannel(){
+    public void CreateRideNotificationChannel(){
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel ridenotificationChannel=new NotificationChannel(ZenSmartBikesNotificationVariables.rideChannelId, ZenSmartBikesNotificationVariables.RideChannelName,NotificationManager.IMPORTANCE_HIGH);
@@ -35,8 +35,8 @@ public class ZenSmartBikesNotifications extends ContextWrapper {
             ridenotificationChannel.setLightColor(Color.YELLOW);
             ridenotificationChannel.enableVibration(true);
             ridenotificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+            getNotificationManager().createNotificationChannel(ridenotificationChannel);
         }
-
 
     }
 

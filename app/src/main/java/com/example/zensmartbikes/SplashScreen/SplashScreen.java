@@ -85,6 +85,8 @@ public class SplashScreen extends AppCompatActivity {
 
         CheckNotificationChannel();
 
+
+
         /*
         Initialising the object of the LocationRequest.
          */
@@ -334,7 +336,8 @@ public class SplashScreen extends AppCompatActivity {
         NotificationManager notificationManager=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             if(notificationManager.getNotificationChannel(ZenSmartBikesNotificationVariables.rideChannelId)==null){
-                ZenSmartBikesNotifications.CreateRideNotificationChannel();
+                ZenSmartBikesNotifications smartBikesNotifications=new ZenSmartBikesNotifications(this);
+                smartBikesNotifications.CreateRideNotificationChannel();
             }
         }
     }

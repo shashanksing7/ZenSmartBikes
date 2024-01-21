@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.zensmartbikes.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
     private static final int SPLASH_DELAY = 2000;
     private static final String PREFS_NAME = "MyPrefsFile";
     private static final String HAS_VISITED_B_KEY = "hasVisitedB";
+
+    /*
+    Instance of firebaseAuth
+     */
+    FirebaseAuth auth;
 
 
     /*
@@ -41,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
          */
         activityMainBinding=ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(activityMainBinding.getRoot());
+
+        /*
+        Getting the Instance of firebaseAuth
+         */
+        auth=FirebaseAuth.getInstance();
 
         /*
         Getting the Nav Controller.
@@ -60,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDestinationChanged(@NonNull NavController navController, @NonNull NavDestination navDestination, @Nullable Bundle bundle) {
 
-                if (navDestination.getId() == R.id.onBoardingScreenOne||navDestination.getId()==R.id.onBoardingScreenTwo) {
+                if (navDestination.getId() == R.id.onBoardingScreenOne||navDestination.getId()==R.id.onBoardingScreenTwo
+                        ||navDestination.getId()==R.id.signUpFragment||navDestination.getId()==R.id.loginFragment) {
                     // Hide the Bottom Navigation View
                     activityMainBinding.bottomNavigationView.setVisibility(View.GONE);
                 } else {
@@ -108,7 +121,19 @@ public class MainActivity extends AppCompatActivity {
             /*
             taking user to the Home Screen.
              */
-            navController.navigate(R.id.homeFragment);
+            FirebaseUser user=auth.getCurrentUser();
+            if(user==null){
+                /*
+                No user is signed in.
+                 */navController.navigate(R.id.loginFragment);
+            }
+            else {
+                /*
+                UserSigned in
+                 */
+                navController.navigate(R.id.homeFragment);
+            }
+
 
         }
         else{

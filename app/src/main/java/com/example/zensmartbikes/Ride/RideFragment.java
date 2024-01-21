@@ -83,6 +83,7 @@ public class RideFragment extends Fragment {
                 /*
                 Service Connected getting the object of the Binder class then finally getting the object of the Service.
                  */
+
                 OnGoingRideService.OnGoingRideServicBinder rideServicBinder=(OnGoingRideService.OnGoingRideServicBinder) service;
                 onGoingRideService=rideServicBinder.getOnGoingRideService();
                  /*
@@ -91,6 +92,7 @@ public class RideFragment extends Fragment {
                 if(!isServiceRunning(OnGoingRideService.class)){
                     if(onGoingRideService!=null){
                         Intent intent=new Intent(getContext(),OnGoingRideService.class);
+                        Toast.makeText(getContext(),"servicstarting", Toast.LENGTH_SHORT).show();
                         getContext().startService(intent);
                     }
                     else{

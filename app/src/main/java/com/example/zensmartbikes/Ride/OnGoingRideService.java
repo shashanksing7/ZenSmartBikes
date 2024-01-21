@@ -1,6 +1,7 @@
 package com.example.zensmartbikes.Ride;
 
 import android.app.ActivityManager;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +9,13 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
+import com.example.zensmartbikes.NotificationChannels.ZenNotificationsBuilder;
+import com.example.zensmartbikes.NotificationChannels.ZenSmartBikesNotificationVariables;
 
 public class OnGoingRideService extends Service {
 
@@ -53,12 +59,23 @@ public class OnGoingRideService extends Service {
     /*
     OnStartCommand Method.
      */
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         /*
         Starting the Notification Channel
          */
+        final int NotificationId=1;
+        /*
+        Getting the method that build the notification for ongoing ride
+         */
+        NotificationCompat.Builder builder=new ZenNotificationsBuilder().getRideNotificationBuilder(this, ZenSmartBikesNotificationVariables.rideChannelId);
+        /*
+        Getting the Notifications Manager.
+         */
+        NotificationManager manager=(NotificationManager) getApplication().getSystemService(NOTIFICATION_SERVICE);
+        manager.notify(NotificationId,builder.build());
+        Toast.makeText(this, "onstart excuetd", Toast.LENGTH_SHORT).show();
+
         return START_REDELIVER_INTENT;
     }
 

@@ -62,53 +62,33 @@
                 android:text="Please Enter Your Mobile Number To Continue"
                 android:textSize="18dp" />
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/EmailTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="15dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="55dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/logincounrtyeditetxt"
-                    android:drawableLeft="@drawable/indian_flag"
-                    android:editable="false"
-                    android:inputType="none"
-                    android:text="+91"
-                    android:textSize="16dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/userloginphonetextlayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
+                android:layout_marginEnd="10dp"
+                android:hint="E-mail"
+                app:hintTextColor="#FFBE47"
+                app:counterEnabled="true"
+                app:counterMaxLength="40"
+                app:startIconTint="#FFBE47"
+                app:startIconDrawable="@drawable/ic_baseline_email_24"
+                app:boxStrokeColor="#FFBE47"
+                android:layout_gravity="center"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/RiderEmail"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1.25"
-                    android:hint="Phone Number"
-                    app:boxStrokeColor="#FFBE47"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="10"
-                    app:hintTextColor="#FFBE47"
-                    app:startIconDrawable="@drawable/ic_baseline_person_24">
+                    android:maxLength="40"
+                    android:inputType="text"
+                    android:textCursorDrawable="@drawable/cursor"
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/userlogintext"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                     android:inputType="phone"
-                    android:maxLength="10"
-                    android:textCursorDrawable="@drawable/cursor"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordTextInputLayout"
