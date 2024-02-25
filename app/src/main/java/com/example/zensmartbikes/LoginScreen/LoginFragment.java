@@ -1,5 +1,6 @@
 package com.example.zensmartbikes.LoginScreen;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -102,45 +103,92 @@ public class LoginFragment extends Fragment {
     /*
     Method to perform login
      */
+//    private void performLogin() {
+//        /*
+//        Validate user input.
+//         */
+//        if (validateInputs()) {
+//            /*
+//            Valid,perform login
+//             */
+//            auth.signInWithEmailAndPassword(UserEmail,UserPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                @Override
+//                public void onComplete(@NonNull Task<AuthResult> task) {
+//                    /*
+//                    Check if login was successful or not
+//                     */
+//                    if(task.isSuccessful()){
+//                        /*
+//                        Successful,take user to home fragment.
+//                         */
+//                            NavController  navController= Navigation.findNavController(loginBinding.getRoot());
+//                            navController.navigate(R.id.homeFragment,null,new NavOptions.Builder()
+//                                .setPopUpTo(R.id.loginFragment,true)
+//                                .build());
+//                    }
+//                    else{
+//                        /*
+//                        Unsuccessful
+//                         */
+//                        loginBinding.loginconfirm.setEnabled(true);
+//                        Toast.makeText(getContext(), "Login UnSuccessful", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+//
+//        } else {
+//            /*
+//            Invalid Input
+//             */
+//            loginBinding.loginconfirm.setEnabled(true);
+//            Toast.makeText(getContext(), "Invalid Input", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
     private void performLogin() {
-        /*
-        Validate user input.
-         */
+        // Show progress dialog
+        ProgressDialog progressDialog = ProgressDialog.show(getContext(), "", "Logging in...", true);
+    /*
+    Validate user input.
+     */
         if (validateInputs()) {
-            /*
-            Valid,perform login
-             */
-            auth.signInWithEmailAndPassword(UserEmail,UserPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        /*
+        Valid, perform login
+         */
+            auth.signInWithEmailAndPassword(UserEmail, UserPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+                /*
+                Check if login was successful or not
+                 */
+                    if (task.isSuccessful()) {
+                        progressDialog.dismiss();
                     /*
-                    Check if login was successful or not
+                    Successful, clear back stack and navigate to home fragment.
                      */
-                    if(task.isSuccessful()){
-                        /*
-                        Successful,take user to home fragment.
-                         */
-                            NavController  navController= Navigation.findNavController(loginBinding.getRoot());
-                            navController.navigate(R.id.homeFragment,null,new NavOptions.Builder()
-                                .setPopUpTo(R.id.onBoardingScreenTwo,true)
-                                .build());
-                    }
-                    else{
-                        /*
-                        Unsuccessful
-                         */
+                        NavController navController = Navigation.findNavController(loginBinding.getRoot());
+                        navController.navigate(R.id.homeFragment, null,
+                                new NavOptions.Builder()
+                                        .setPopUpTo(R.id.loginFragment, true)
+                                        .setPopUpTo(R.id.signUpFragment, true)
+                                        .build());
+                    } else {
+                    /*
+                    Unsuccessful
+                     */
+                        progressDialog.dismiss();
                         loginBinding.loginconfirm.setEnabled(true);
-                        Toast.makeText(getContext(), "Login UnSuccessful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Login Unsuccessful", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
-
         } else {
-            /*
-            Invalid Input
-             */
+        /*
+        Invalid Input
+         */
             loginBinding.loginconfirm.setEnabled(true);
             Toast.makeText(getContext(), "Invalid Input", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Color;
+import android.os.Build;
 
 /*
 This class will be used to create Notification channels.
@@ -24,7 +25,7 @@ public class ZenSmartBikesNotifications extends ContextWrapper {
          */
     public void CreateRideNotificationChannel(){
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel ridenotificationChannel=new NotificationChannel(ZenSmartBikesNotificationVariables.rideChannelId, ZenSmartBikesNotificationVariables.RideChannelName,NotificationManager.IMPORTANCE_HIGH);
            /*
            will be visible even after screen lock.

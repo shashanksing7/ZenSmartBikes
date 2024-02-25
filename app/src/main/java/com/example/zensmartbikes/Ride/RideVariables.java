@@ -12,4 +12,6 @@ public class RideVariables {
     public static   boolean RidePaused=false;
     public  static boolean RideResumed=false;
 
+    public static  boolean RideServiceStarted=false;
+
 }

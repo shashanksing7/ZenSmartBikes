@@ -1,5 +1,8 @@
 package com.example.zensmartbikes.SignUpScreen;
 
+import static android.content.ContentValues.TAG;
+
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +11,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +23,14 @@ import com.example.zensmartbikes.R;
 import com.example.zensmartbikes.databinding.FragmentSignUpBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 This Class will be used to signup on Firebase.
@@ -47,6 +57,15 @@ public class SignUpFragment extends Fragment {
     Creating instance of the firebase FireBAseAuth class;
      */
     FirebaseAuth firebaseAuth;
+    /*
+    fireSTORE OBJECT.
+     */
+    FirebaseFirestore firestore;
+
+    /*
+    String variable to store UUId of the signed-in user
+     */
+    String UUID;
 
     public SignUpFragment() {
         // Required empty public constructor
@@ -64,6 +83,10 @@ public class SignUpFragment extends Fragment {
         Initialising the firebaseAuth  object.
          */
         firebaseAuth=FirebaseAuth.getInstance();
+        /*
+        getting instance.
+         */
+        firestore=FirebaseFirestore.getInstance();
 
         /*
         Creating the String Array for the gender drop down spinner;
@@ -143,48 +166,235 @@ public class SignUpFragment extends Fragment {
     /*
     This method will perform the signup after validation.
      */
-    public void PerformSignUp(){
-        /*
-        Checking if user Entered Data is valid or not
-         */
-        if(validateInputs()){
-            /*
-            Input valid,perform signup.
-             */
-            firebaseAuth.createUserWithEmailAndPassword(UserEmail,UserPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//    public void PerformSignUp(){
+//        /*
+//        Checking if user Entered Data is valid or not
+//         */
+//        if(validateInputs()){
+//            /*
+//            Input valid,perform signup.
+//             */
+//            firebaseAuth.createUserWithEmailAndPassword(UserEmail,UserPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                @Override
+//                public void onComplete(@NonNull Task<AuthResult> task) {
+//                    /*
+//                    Checking if task is successful or not;
+//                     */
+//                    if(task.isSuccessful()){
+//                                                /*
+//                        Successful,Save User Data.
+//                         */
+//                        UUID=firebaseAuth.getCurrentUser().getUid();
+//                        DocumentReference documentReference=firestore.collection("Rider").document(UUID);
+//                        /*
+//                        Creating a map object to represent the User.
+//                         */
+//                        Map<String,Object> user=new HashMap<>();
+//                        /*
+//                        Adding user details
+//                         */
+//                        user.put("Name",UserName);
+//                        user.put("Email",UserEmail);
+//                        user.put("Password",UserPassword);
+//                        user.put("Gender",UserGender);
+//                        user.put("Rides",0);
+//                        /*
+//                        Populating the database and adding an event listener.
+//                         */
+//                        documentReference.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    /*
+//                                    Successful navigate user to home fragment.
+//                                     */
+//                                    NavController navController = Navigation.findNavController(signUpBinding.getRoot());
+//                                    navController.navigate(R.id.homeFragment, null, new NavOptions.Builder()
+//                                            .setPopUpTo(R.id.onBoardingScreenTwo, true)
+//                                            .build());
+//                                } else {
+//
+//                                    firebaseAuth.signOut();
+//
+//
+//                                    Log.d("mytag", "onComplete: " + task.toString());
+//                                    Toast.makeText(getContext(), "Failed saving data", Toast.LENGTH_SHORT).show();
+//
+//                                    // Since saving data failed, you may want to enable the signup button again
+//                                    signUpBinding.loginconfirm.setEnabled(true);
+//                                }
+//                            }
+//                        });
+//                    }
+//                    else {
+//                        /*
+//                        UnSuccessful
+//                         */
+//                        signUpBinding.loginconfirm.setEnabled(true);
+//                        Toast.makeText(getContext(), "signup unsuccessful", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                }
+//            });
+//        }
+//        else{
+//            /*
+//            Invalid input.
+//             */
+//            signUpBinding.loginconfirm.setEnabled(true);
+//            Toast.makeText(getContext(), "Invalid Input", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+//    public void PerformSignUp() {
+//    /*
+//    Checking if user Entered Data is valid or not
+//    */
+//        if (validateInputs()) {
+//        /*
+//        Input valid,perform signup.
+//        */
+//            firebaseAuth.createUserWithEmailAndPassword(UserEmail, UserPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                @Override
+//                public void onComplete(@NonNull Task<AuthResult> task) {
+//                /*
+//                Checking if task is successful or not;
+//                */
+//                    if (task.isSuccessful()) {
+//                    /*
+//                    Successful,Save User Data.
+//                    */
+//                        UUID = firebaseAuth.getCurrentUser().getUid();
+//                        DocumentReference documentReference = firestore.collection("Rider").document(UUID);
+//                    /*
+//                    Creating a map object to represent the User.
+//                    */
+//                        Map<String, Object> user = new HashMap<>();
+//                    /*
+//                    Adding user details
+//                    */
+//                        user.put("Name", UserName);
+//                        user.put("Email", UserEmail);
+//                        user.put("Password", UserPassword);
+//                        user.put("Gender", UserGender);
+//                        user.put("Rides", 0);
+//                    /*
+//                    Populating the database and adding an event listener.
+//                    */
+//                        documentReference.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                /*
+//                                Successful navigate user to home fragment.
+//                                */
+//                                    NavController navController = Navigation.findNavController(signUpBinding.getRoot());
+//                                    navController.navigate(R.id.homeFragment, null, new NavOptions.Builder()
+//                                            .setPopUpTo(R.id.onBoardingScreenTwo, true)
+//                                            .build());
+//                                } else {
+//                                    // If saving data fails, sign out the user and delete the account
+//                                    firebaseAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<Void> taskDeleteAccount) {
+//                                            if (taskDeleteAccount.isSuccessful()) {
+//                                                // User account deleted successfully
+//                                                Log.d(TAG, "onComplete: User account deleted");
+//                                            } else {
+//                                                // Failed to delete user account
+//
+//                                                Log.e(TAG, "onComplete: Failed to delete user account", taskDeleteAccount.getException());
+//                                            }
+//
+//                                            Log.d("mytag", "onComplete:sss " + task.getException().toString());
+//                                            Toast.makeText(getContext(), "Failed saving data", Toast.LENGTH_SHORT).show();
+//
+//                                            // Since saving data failed, you may want to enable the signup button again
+//                                            signUpBinding.loginconfirm.setEnabled(true);
+//                                        }
+//                                    });
+//                                }
+//                            }
+//                        });
+//                    } else {
+//                    /*
+//                    UnSuccessful
+//                    */
+//                        signUpBinding.loginconfirm.setEnabled(true);
+//                        Toast.makeText(getContext(), "signup unsuccessful", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                }
+//            });
+//        } else {
+//        /*
+//        Invalid input.
+//        */
+//            signUpBinding.loginconfirm.setEnabled(true);
+//            Toast.makeText(getContext(), "Invalid Input", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+    public void PerformSignUp() {
+        if (validateInputs()) {
+            // Show progress dialog
+            ProgressDialog progressDialog = ProgressDialog.show(getContext(), "", "Signing up...", true);
+
+            firebaseAuth.createUserWithEmailAndPassword(UserEmail, UserPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    /*
-                    Checking if task is successful or not;
-                     */
-                    if(task.isSuccessful()){
-                                                /*
-                        Successful,take user to home fragment.
-                         */
-                        NavController navController= Navigation.findNavController(signUpBinding.getRoot());
-                        navController.navigate(R.id.homeFragment,null,new NavOptions.Builder()
-                                .setPopUpTo(R.id.onBoardingScreenTwo,true)
-                                .build());
-                    }
-                    else {
-                        /*
-                        UnSuccessful
-                         */
-                        signUpBinding.loginconfirm.setEnabled(true);
-                        Toast.makeText(getContext(), "signup unsuccessful", Toast.LENGTH_SHORT).show();
-                    }
+                    progressDialog.dismiss(); // Dismiss progress dialog
 
+                    if (task.isSuccessful()) {
+                        // Sign up successful
+                        UUID = firebaseAuth.getCurrentUser().getUid();
+                        DocumentReference documentReference = firestore.collection("Rider").document(UUID);
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("Name", UserName);
+                        user.put("Email", UserEmail);
+                        user.put("Password", UserPassword);
+                        user.put("Gender", UserGender);
+                        user.put("Rides", 0);
+
+                        documentReference.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                progressDialog.dismiss(); // Dismiss progress dialog
+
+                                if (task.isSuccessful()) {
+                                    NavController navController = Navigation.findNavController(signUpBinding.getRoot());
+                                    navController.navigate(R.id.homeFragment, null, new NavOptions.Builder()
+                                            .setPopUpTo(R.id.onBoardingScreenTwo, true)
+                                            .build());
+                                } else {
+                                    // Handle failure to save data
+                                    firebaseAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> taskDeleteAccount) {
+                                            // Handle failure to delete user account
+                                            Log.e(TAG, "Failed to delete user account", taskDeleteAccount.getException());
+                                            Toast.makeText(getContext(), "Failed to save data", Toast.LENGTH_SHORT).show();
+                                            signUpBinding.loginconfirm.setEnabled(true);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        // Sign up unsuccessful
+                        progressDialog.dismiss(); // Dismiss progress dialog
+                        Toast.makeText(getContext(), "Sign up unsuccessful", Toast.LENGTH_SHORT).show();
+                        signUpBinding.loginconfirm.setEnabled(true);
+                    }
                 }
             });
-        }
-        else{
-            /*
-            Invalid input.
-             */
+        } else {
+            // Invalid input
             signUpBinding.loginconfirm.setEnabled(true);
-            Toast.makeText(getContext(), "Invalid Input", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Invalid input", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 }

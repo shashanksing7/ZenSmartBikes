@@ -2,65 +2,123 @@ package com.example.zensmartbikes.Profile;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.zensmartbikes.R;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
+import com.example.zensmartbikes.databinding.FragmentUserProfileBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+/*
+This profiles is used to handle an display the user information.
  */
+
 public class UserProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    /*
+    creating the object of the binding class.
+     */
+    FragmentUserProfileBinding userProfileBinding;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    /*
+     creating the object of the FirebaseAuth.
+     */
+    private FirebaseAuth firebaseAuth;
+
+    /*
+    creating the object of the FireStore
+     */
+    private FirebaseFirestore firestore;
+    /*
+    Creating the variables to store the UUID of current user.
+     */
+    private  String UUID;
+    /*
+    Static variables to act as keys.
+     */
+    public static final String FIELD_NAME = "Name";
+    public static final String FIELD_EMAIL = "Email";
+    public static final String FIELD_GENDER = "Gender";
+    public static final String FIELD_RIDES = "Rides";
 
     public UserProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UserProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static UserProfileFragment newInstance(String param1, String param2) {
-        UserProfileFragment fragment = new UserProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_profile, container, false);
+        userProfileBinding=FragmentUserProfileBinding.inflate(inflater,container,false);
+        /*
+        Getting the instance of the FirebaseAuth.
+         */
+        firebaseAuth=FirebaseAuth.getInstance();
+        /*
+        Getting instance of the fireStore;
+         */
+        firestore=FirebaseFirestore.getInstance();
+        /*
+        Getting the data from the fireStore.
+         */
+        UUID=firebaseAuth.getCurrentUser().getUid();
+        DocumentReference reference=firestore.collection("Rider").document(UUID);
+        /*
+        Adding snapshot listener to listen to any change in the data .
+         */
+        reference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error!=null){
+                    /*
+                    Error
+                     */
+
+                }else {
+                    /*
+                    Successful.
+                     */
+                    userProfileBinding.usernameTextView.setText(value.getString(FIELD_NAME));
+                    userProfileBinding.userEmailTextView.setText(value.getString(FIELD_EMAIL));
+                    userProfileBinding.numberOfRidesTextView.setText("Number of Rides: "+value.getLong(FIELD_RIDES));
+                }
+            }
+        });
+
+        /*
+        Adding listener to logout button.
+         */
+        userProfileBinding.LogoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                Logout user and Navigate to Login Screen.
+                 */
+                firebaseAuth.signOut();
+                /*
+                Getting the Nav-controller and navigate to login screen;
+                 */
+                NavController controller= Navigation.findNavController(userProfileBinding.getRoot());
+                controller.navigate(R.id.loginFragment,null,new NavOptions.Builder().
+                        setPopUpTo(R.id.homeFragment,true).
+                        setPopUpTo(R.id.userProfileFragment,true).
+                        build());
+
+            }
+        });
+
+        return userProfileBinding.getRoot();
     }
 }
