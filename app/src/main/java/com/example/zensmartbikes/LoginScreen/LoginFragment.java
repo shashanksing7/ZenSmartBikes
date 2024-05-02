@@ -146,12 +146,13 @@ public class LoginFragment extends Fragment {
 //    }
 
     private void performLogin() {
-        // Show progress dialog
-        ProgressDialog progressDialog = ProgressDialog.show(getContext(), "", "Logging in...", true);
+
     /*
     Validate user input.
      */
         if (validateInputs()) {
+            // Show progress dialog
+            ProgressDialog progressDialog = ProgressDialog.show(getContext(), "", "Logging in...", true);
         /*
         Valid, perform login
          */

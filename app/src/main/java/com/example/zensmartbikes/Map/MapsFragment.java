@@ -94,6 +94,8 @@ public class MapsFragment extends Fragment {
        instance.startSendingRequests( new getLonLatCallBack() {
           @Override
             public void onSuccess(LocationData data) {
+
+              Log.d("mytag", "data got: "+data.getLongitude()+" ++"+data.getLatitude());
               /*
               Checking if the currentLocation button is Enabled or not and calling th function to enable it.
                */
@@ -142,7 +144,7 @@ public class MapsFragment extends Fragment {
               /*
               Updating the last location of bikes in shared preferences .
                */
-//              saveLastLocation( Double.parseDouble(data.getLongitude()), Double.parseDouble(data.getLatitude()));
+              saveLastLocation( Double.parseDouble(data.getLongitude()), Double.parseDouble(data.getLatitude()));
             }
 
 
