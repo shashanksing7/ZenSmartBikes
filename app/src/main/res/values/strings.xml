@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">ZenBikes</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -10,4 +10,6 @@
     <string name="OnBoardingScreen2">Its Economical, Easy on Poclets !</string>
     <string name="StartRide">Smart Lock</string>
     <string name="Maps">Fetch Location</string>
+    <string name="MAPBOX_DOWNLOADS_TOKEN">sk.eyJ1IjoiemVudG9yYyIsImEiOiJjbHY2d3A4ZWUwMnlwMm5taXd2NnRrM2UwIn0.DeIZVoR7UiX4AZOl-rJ9Mw</string>
+    <string name="mapbox_access_token" translatable="false" tools:ignore="UnusedResources">sk.eyJ1IjoiemVudG9yYyIsImEiOiJjbHY2d3A4ZWUwMnlwMm5taXd2NnRrM2UwIn0.DeIZVoR7UiX4AZOl-rJ9Mw</string>
 </resources>

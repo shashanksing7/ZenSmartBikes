@@ -16,10 +16,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.zensmartbikes.Map.AnimationHelper;
 import com.example.zensmartbikes.Ride.OnGoingRideService;
 import com.example.zensmartbikes.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private static final int SPLASH_DELAY = 2000;
-    private static final String PREFS_NAME = "MyPrefsFile";
+    private static final String PREFS_NAME = "MyPrefs";
     private static final String HAS_VISITED_B_KEY = "hasVisitedB";
 
     /*
@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         Getting the Instance of firebaseAuth
          */
         auth=FirebaseAuth.getInstance();
+
+
 
         /*
         Getting the Nav Controller.

@@ -43,11 +43,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
 
 import java.util.List;
 
@@ -821,25 +817,25 @@ public class RideFragment extends Fragment {
     /*
     Request permission for foreground services type.
      */
-    private  void requestPermission(){
-        /*
-        Using dexter to get permission.
-         */
-        Log.d(TAG, "requestForeGroundType: ");
-        Dexter.withContext(getContext())
-                .withPermissions(Manifest.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE,Manifest.permission.BLUETOOTH_CONNECT)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                        isAdapterEnabled();
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-
-                        permissionToken.continuePermissionRequest();
-                    }
-                }).check();
+    private  void requestPermission() {
+//        /*
+//        Using dexter to get permission.
+//         */
+//        Log.d(TAG, "requestForeGroundType: ");
+//        Dexter.withContext(getContext())
+//                .withPermissions(Manifest.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE,Manifest.permission.BLUETOOTH_CONNECT)
+//                .withListener(new MultiplePermissionsListener() {
+//                    @Override
+//                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+//                        isAdapterEnabled();
+//                    }
+//
+//                    @Override
+//                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+//
+//                        permissionToken.continuePermissionRequest();
+//                    }
+//                }).check();
+//    }
     }
-
 }
