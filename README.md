@@ -15,7 +15,7 @@ ZenSmart Bikes is an Android application designed to integrate with IoT-enabled 
 
 1. Clone this repository:
    ```sh
-   git clone https://github.com/yourusername/zensmart-bikes.git
+   git clone https://github.com//shashanksing7/ZenSmartBikes.git
    ```
 2. Open the project in **Android Studio**.
 3. Sync Gradle and build the project.
